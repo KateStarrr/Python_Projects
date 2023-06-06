@@ -1,0 +1,31 @@
+import os
+import re
+from base64 import b64decode
+from Crypto.Cipher import AES
+
+i = 0
+
+key = b"mvLBiZsiTbGwrfJB"
+
+for address, dirs, files in os.walk("html"):
+    for name in files:
+        try:
+            if(os.path.join(address, name).endswith(".html")):
+                with open(os.path.join(address, name),"r") as file:
+                    text = file.read()
+                    #print(text)
+                    cyphertext = re.findall('=".*="',text)[0][2:-1]
+                    cyphertext = b64decode(cyphertext)
+                    Cryptor = AES.new(key, AES.MODE_ECB)
+                    res= Cryptor.decrypt(cyphertext).decode("UTF-8")
+                    #print(cyphertext)
+
+                    #print(res,"       ",i)
+                    if not  ":(" in res:
+                        print(res)
+                    i+=1
+
+
+        except Exception as e:
+            print(e)
+            
